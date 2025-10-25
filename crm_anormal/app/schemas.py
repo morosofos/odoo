@@ -21,3 +21,37 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
+class ContatoBase(BaseModel):
+    nome: str
+    cargo: Optional[str] = None
+    email: Optional[str] = None
+    telefone: Optional[str] = None
+    observacao: Optional[str] = None
+
+class ContatoCreate(ContatoBase):
+    pass
+
+class Contato(ContatoBase):
+    id: int
+    empresa_id: int
+
+    class Config:
+        orm_mode = True
+
+class EmpresaBase(BaseModel):
+    nome_fantasia: str
+    razao_social: Optional[str] = None
+    cnpj: Optional[str] = None
+    situacao: str = 'Prospecção'
+
+class EmpresaCreate(EmpresaBase):
+    pass
+
+class Empresa(EmpresaBase):
+    id: int
+    usuario_responsavel_id: Optional[int] = None
+    contatos: list[Contato] = []
+
+    class Config:
+        orm_mode = True

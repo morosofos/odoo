@@ -1,12 +1,14 @@
 from fastapi import FastAPI
 from .database import engine, Base
-from .routers import auth
+from .routers import auth, empresas, contatos
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
+app.include_router(empresas.router, prefix="/empresas", tags=["empresas"])
+app.include_router(contatos.router, prefix="/empresas/{empresa_id}/contatos", tags=["contatos"])
 
 @app.get("/")
 def read_root():
