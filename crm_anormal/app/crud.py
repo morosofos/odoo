@@ -79,3 +79,33 @@ def delete_contato(db: Session, contato_id: int):
         db.delete(db_contato)
         db.commit()
     return db_contato
+
+# Funções CRUD para ProjetoInvestimento
+def create_projeto_investimento(db: Session, projeto: schemas.ProjetoInvestimentoCreate, empresa_id: int):
+    db_projeto = models.ProjetoInvestimento(**projeto.dict(), empresa_id=empresa_id)
+    db.add(db_projeto)
+    db.commit()
+    db.refresh(db_projeto)
+    return db_projeto
+
+def get_projetos_by_empresa(db: Session, empresa_id: int, skip: int = 0, limit: int = 100):
+    return db.query(models.ProjetoInvestimento).filter(models.ProjetoInvestimento.empresa_id == empresa_id).offset(skip).limit(limit).all()
+
+def get_projeto(db: Session, projeto_id: int):
+    return db.query(models.ProjetoInvestimento).filter(models.ProjetoInvestimento.id == projeto_id).first()
+
+def update_projeto(db: Session, projeto_id: int, projeto: schemas.ProjetoInvestimentoCreate):
+    db_projeto = db.query(models.ProjetoInvestimento).filter(models.ProjetoInvestimento.id == projeto_id).first()
+    if db_projeto:
+        for key, value in projeto.dict().items():
+            setattr(db_projeto, key, value)
+        db.commit()
+        db.refresh(db_projeto)
+    return db_projeto
+
+def delete_projeto(db: Session, projeto_id: int):
+    db_projeto = db.query(models.ProjetoInvestimento).filter(models.ProjetoInvestimento.id == projeto_id).first()
+    if db_projeto:
+        db.delete(db_projeto)
+        db.commit()
+    return db_projeto

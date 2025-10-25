@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, TIMESTAMP, TEXT
+from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, TIMESTAMP, TEXT, DECIMAL, DATE
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from .database import Base
@@ -28,6 +28,7 @@ class Empresa(Base):
 
     usuario_responsavel = relationship("Usuario", back_populates="empresas")
     contatos = relationship("Contato", back_populates="empresa")
+    projetos = relationship("ProjetoInvestimento", back_populates="empresa")
 
 class Contato(Base):
     __tablename__ = "contato"
@@ -41,3 +42,18 @@ class Contato(Base):
     observacao = Column(TEXT)
 
     empresa = relationship("Empresa", back_populates="contatos")
+
+class ProjetoInvestimento(Base):
+    __tablename__ = "projeto_investimento"
+
+    id = Column(Integer, primary_key=True, index=True)
+    empresa_id = Column(Integer, ForeignKey('empresa.id'), nullable=False)
+    nome = Column(String(255), nullable=False)
+    descricao = Column(TEXT)
+    status = Column(String(50), nullable=False, default='Análise')
+    investimento_estimado_reais = Column(DECIMAL(20, 2))
+    empregos_estimados_diretos = Column(Integer)
+    data_inicio_prevista = Column(DATE)
+    data_operacao_prevista = Column(DATE)
+
+    empresa = relationship("Empresa", back_populates="projetos")

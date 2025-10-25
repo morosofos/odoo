@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
+from datetime import date
+from decimal import Decimal
 
 class Token(BaseModel):
     access_token: str
@@ -18,6 +20,25 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
+
+    class Config:
+        orm_mode = True
+
+class ProjetoInvestimentoBase(BaseModel):
+    nome: str
+    descricao: Optional[str] = None
+    status: str = 'Análise'
+    investimento_estimado_reais: Optional[Decimal] = None
+    empregos_estimados_diretos: Optional[int] = None
+    data_inicio_prevista: Optional[date] = None
+    data_operacao_prevista: Optional[date] = None
+
+class ProjetoInvestimentoCreate(ProjetoInvestimentoBase):
+    pass
+
+class ProjetoInvestimento(ProjetoInvestimentoBase):
+    id: int
+    empresa_id: int
 
     class Config:
         orm_mode = True
